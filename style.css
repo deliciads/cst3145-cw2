@@ -1,0 +1,148 @@
+/* CSS for index.html */
+body {
+    background-color: palevioletred;
+     
+}
+
+h1 {
+    text-align: center;
+    font-family: 'Big Shoulders Stencil Text';
+    font-size: 47px;
+}
+
+.border {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    background-color: pink;
+    margin: auto;
+    width: 450px;
+    height: 250px;
+    font-family: arial;
+}
+
+.details {
+    position: relative;
+    bottom: 250px;
+    left: 300px;
+    color: black;
+    font-size: 18px;
+}
+
+img {
+    position: relative;
+    right: 40px;
+}
+
+.sub {
+    position: relative;
+    bottom: 250px;
+    left: 250px;
+}
+
+.addBtn {
+    position: relative;
+    left: 305px;
+    bottom: 250px;
+    height: 50px;
+}
+
+.cartBtn {
+    position: relative;
+    left: 1000px;
+    bottom: 100px;
+    height: 40px;
+    width: 150px;
+}
+
+.removeBtn {
+    position: relative;
+    left: 305px;
+    bottom: 250px;
+    height: 50px;
+}
+
+.sortBtn {
+    position: relative;
+    left: 10px;
+    top: 100px;
+    background-color: pink;
+    width: 300px;
+}
+
+.priceBtn {
+    position: relative;
+    top: 120px;
+    left: 100px;
+    background-color: pink;
+    width: 100px;
+}
+
+.subBtn {
+    position: relative;
+    top: 120px;
+    left: 100px;
+    background-color: pink;
+    width: 100px;
+}
+
+.locBtn {
+    position: relative;
+    top: 120px;
+    left: 100px;
+    background-color: pink;
+    width: 100px;
+}
+
+.spaceBtn {
+    position: relative;
+    top: 120px;
+    left: 100px;
+    background-color: pink;
+    width: 100px;
+}
+
+.cartHeading {
+    text-align: center;
+}
+
+.checkHeading {
+    text-align: center;
+}
+
+.nameInput {
+    position: relative;
+    left: 350px;
+    height: 25px;
+}
+
+.nameTitle {
+    position: relative;
+    left: 340px;
+}
+
+.phoneInput {
+    position: relative;
+    left: 650px;
+    bottom: 40px;
+    height: 25px;
+}
+
+.phoneTitle {
+    position: relative;
+    left: 640px;
+    bottom: 40px;
+}
+
+.backBtn {
+    height: 40px;
+    width: 150px;
+}
+
+.checkBtn {
+    position: relative;
+    left: 550px;
+    height: 40px;
+    width: 150px;
+}
+
+
+

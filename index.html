@@ -1,0 +1,255 @@
+<html>
+
+<head>
+    <title>School Lessons</title>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="lessons.js"></script>                              <!-- links to js file-->
+    <link rel="stylesheet" type="text/css" href="style.css">        <!-- links to css file-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Text:wght@500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <h1 v-text="sitename"></h1>                 <!-- heading is printed here -->
+        </header>
+
+        <main>
+            <div v-if='showProduct'>                <!-- shows the lessons page -->
+                <div class="sortDiv">
+                <div class="sortBtn">
+                    <input type="radio" v-model="sortOrder" value='ascending' class="asc-btn">      <!-- ascending button -->
+                    Ascending Order
+
+                    <input type="radio" v-model="sortOrder" value='descending'>                     <!-- descending button -->
+                    Descending Order
+                </div>
+
+                <div class="priceBtn">
+                    <input type="radio" v-model="attribute" value="price">
+                    Price
+                </div>
+
+                <div class="subBtn">
+                    <input type="radio" v-model="attribute" value="subject">
+                    Subject
+                </div>
+
+                <div class="locBtn">
+                    <input type="radio" v-model="attribute" value="location">
+                    Location
+                </div>
+
+                <div class="spaceBtn">
+                    <input type="radio" v-model="attribute" value="space">
+                    Availability
+                </div>
+            </div>
+
+                <button class="cartBtn" v-on:click='showCheckout' v-if=cartItemCount>           <!-- shows checkout page when button is clicked-->
+                    {{ cartItemCount }}                                                         <!-- prints the number of lessons added to cart-->
+                    <span class="fas fa-cart-plus"></span> Shopping Cart
+                </button>
+                <button class="cartBtn" disabled='disabled' v-else>
+                    Shopping Cart
+                </button>
+
+                <div v-for="lesson in sortedProducts" class="border">                   <!-- sorts the lessons when the sort buttons are clicked-->
+
+                    <figure>
+                        <img v-bind:src="lesson.image" width=250px height=250px>            <!-- image of the lesson-->
+                    </figure>
+                    <h2 v-text="lesson.title" class="sub"></h2>                             <!-- subject name-->
+                    <p class="details" v-html="lesson.location"></p>
+                    <p class="details">Price: Dhs {{lesson.price}}</p>                      <!-- lesson price-->
+                    <p class="details">Space: {{lesson.availableSpace}}</p>                 <!-- lesson available space-->
+
+                    <button class="addBtn" v-on:click="addToCart(lesson)" v-if="canAddToCart(lesson)">          <!--if space remains, the button remains enabled-->
+                        Add to Cart
+                    </button>
+
+                    <button class="addBtn" disabled='disabled' v-else>              <!--if space is 0, the button disables-->
+                        Add to Cart
+                    </button>
+
+                </div>
+            </div>
+
+            <div v-else>
+                <button class="backBtn" v-on:click='showCheckout'>Back to Lessons</button>          <!-- goes back to lessons page when clicked-->
+                <h2 class="cartHeading"> Shopping Cart </h2>
+                <div v-for="(lesson, index) in cart" class="border">                <!-- used to remove an item from cart-->
+                    <figure>
+                        <img v-bind:src="lesson.image" width=250px height=250px>
+                    </figure>
+                    <h2 v-text="lesson.title" class="sub"></h2>
+                    <p class="details" v-html="lesson.location"></p>
+                    <p class="details">Price: Dhs {{lesson.price}}</p>
+                    <button v-on:click="cart.splice(index, 1)" class="removeBtn">Remove</button>            <!-- removes one item from cart when button is clicked -->
+                </div>
+
+                <h2 class="checkHeading">Checkout</h2>
+                <p>
+                    <strong class="nameTitle">Name: </strong>
+                    <input class="nameInput" type="text" v-model.trim="order.name" />
+                </p>
+                <p>
+                    <strong class="phoneTitle">Phone: </strong>
+                    <input class="phoneInput" v-model.trim="order.phone" />
+                </p>
+
+                <button class="checkBtn" v-on:click="submitForm" v-if="confirmCheckout">            <!-- if name has letters and phone has numbers, button will be enabled-->
+                    Checkout
+                </button>
+
+                <button class="checkBtn" disabled='disabled' v-else>                    <!-- button stays disabled if field is empty and the data typed is not valid-->
+                    Checkout
+                </button>
+            </div>
+        </main>
+
+    </div>
+
+    <script type="text/javascript">
+        var webstore = new Vue({
+            el: '#app',
+            data: {
+                sitename: 'School Lessons',
+                lessons: lessons,
+                cart: [],                       //cart array stores the lessons added
+                showProduct: true,              //lesson page is shown
+                attribute: '',                  //each category
+                sortOrder: '',                  //used to sort the attributes in ascending or descending
+                order: {                        //checkout details
+                    name: '',
+                    phone: ''
+                }
+            },
+
+            methods: {
+                addToCart(lesson) {
+                    this.cart.push(lesson);                     //pushes the object to the cart when button is clicked
+                    lesson.availableSpace--;                    // the space decreases by 1 when button is clicked
+                },
+
+                canAddToCart(lesson) {
+                    return lesson.availableSpace > 0;           //checks if the user added items more than the available inventory
+                },
+
+                showCheckout() {
+                    this.showProduct = this.showProduct ? false : true;             //shows checkout page when button is clicked
+                },
+
+                submitForm() {
+                    alert('Order submitted!');                              //displays alert message when checkout button is clicked
+                }
+            },
+
+            computed: {
+                cartItemCount: function () {                                //prints the number of items being added to cart
+                    return this.cart.length;
+                },
+
+                confirmCheckout() {
+                    let letters = /^[A-Za-z]+$/;                                    //checks if the name input contains letters and phone input contains numbers
+                    let numbers = /^[0-9]+$/;
+                    return letters.test(this.order.name) && numbers.test(this.order.phone);
+                },
+
+                sortedProducts() {
+                    let lessonsArray = this.lessons.slice(0);
+                    if (this.attribute == 'space') {                            //sorts the available spaces in ascending order
+                        if (this.sortOrder == 'ascending') {
+                            function compare(a, b) {
+                                if (a.availableSpace > b.availableSpace)
+                                    return 1;
+                                if (a.availableSpace < b.availableSpace)
+                                    return -1;
+                                return 0;
+                            }
+                        }
+                        else if (this.sortOrder == 'descending') {              //sorts the available spaces in descending order
+                            function compare(a, b) {
+                                if (a.availableSpace < b.availableSpace)
+                                    return 1;
+                                if (a.availableSpace > b.availableSpace)
+                                    return -1;
+                                return 0;
+                            }
+                        }
+                    }
+
+                    if (this.attribute == 'subject') {                  //sorts the subject from A-Z
+                        if (this.sortOrder == 'ascending') {
+                            function compare(a, b) {
+                                if (a.title > b.title)
+                                    return 1;
+                                if (a.title < b.title)
+                                    return -1;
+                                return 0;
+                            }
+                        }
+                        else if (this.sortOrder == 'descending') {          //sorts the subject from Z-A
+                            function compare(a, b) {
+                                if (a.title < b.title)
+                                    return 1;
+                                if (a.title > b.title)
+                                    return -1;
+                                return 0;
+                            }
+                        }
+                    }
+
+                    if (this.attribute == 'price') {                    //sorts the price in ascending order
+                        if (this.sortOrder == 'ascending') {
+                            function compare(a, b) {
+                                if (a.price > b.price)
+                                    return 1;
+                                if (a.price < b.price)
+                                    return -1;
+                                return 0;
+                            }
+                        }
+                        else if (this.sortOrder == 'descending') {          //sorts the price in descending order
+                            function compare(a, b) {
+                                if (a.price < b.price)
+                                    return 1;
+                                if (a.price > b.price)
+                                    return -1;
+                                return 0;
+                            }
+                        }
+                    }
+
+                    if (this.attribute == 'location') {                 //sorts the location from A-Z
+                        if (this.sortOrder == 'ascending') {
+                            function compare(a, b) {
+                                if (a.location > b.location)
+                                    return 1;
+                                if (a.location < b.location)
+                                    return -1;
+                                return 0;
+                            }
+                        }
+                        else if (this.sortOrder == 'descending') {              //sorts the location from Z-A
+                            function compare(a, b) {
+                                if (a.location < b.location)
+                                    return 1;
+                                if (a.location > b.location)
+                                    return -1;
+                                return 0;
+                            }
+                        }
+                    }
+
+                    return lessonsArray.sort(compare);
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>

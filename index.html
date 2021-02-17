@@ -141,29 +141,14 @@
                     this.showProduct = this.showProduct ? false : true;             //shows checkout page when button is clicked
                 },
 
-                /*submitForm() {
-                    alert('Order submitted!');                              //displays alert message when checkout button is clicked
-                },*/
-
-                /*saveOrder(body) {
-                    fetch('http://localhost:3000/collection/orders', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(body)
-                    }).then(response => response.json())
-                    .then(data => { return data }).catch(err => { return data });
-                },*/
-
-                getLessons() {                                          //retrieves all the lessons with
+                getLessons() {                                          //retrieves all the lessons with GET
                     fetch('http://localhost:3000/collection/lessons')
                         .then(response => response.json())
                         .then(data => this.lessons = data)
                         .catch(err => console.log(err));
                 },
 
-                checkout(body) {
+                checkout(body) {                                //saves a new order with POST
                     this.cart.forEach(item => {
                         let body = {
                             "id": item.id,                          //lesson id 
@@ -180,11 +165,29 @@
                         },
                         body: JSON.stringify(body)
                     })
+
+                    this.updateSpace(item.id, item.availableSpace);
                     });
                     alert ("Order submitted");                              //gives alert message
                     this.getLessons();
                     this.cart = [];                                             //clears the cart
                 },
+
+                updateSpace(id, availableSpace) {                                       //updates the available lesson space with PUT
+                    fetch('http://localhost:3000/collection/lessons/602b67c41f94f36154a61a0b', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(
+                            {
+                                "availableSpace": availableSpace
+                            }
+                        )
+
+                    }).then(response => response.json())
+                    .then(data => { return data }).catch(err => { return data});
+                }   
             },
 
             

@@ -99,7 +99,7 @@
                     <input class="phoneInput" v-model.trim="order.phone" />
                 </p>
 
-                <button class="checkBtn" v-on:click="submitForm" v-if="confirmCheckout">            <!-- if name has letters and phone has numbers, button will be enabled-->
+                <button class="checkBtn" v-on:click="checkout" v-if="confirmCheckout">            <!-- if name has letters and phone has numbers, button will be enabled-->
                     Checkout
                 </button>
 
@@ -141,44 +141,38 @@
                     this.showProduct = this.showProduct ? false : true;             //shows checkout page when button is clicked
                 },
 
-                submitForm() {
-                    alert('Order submitted!');                              //displays alert message when checkout button is clicked
+                getLessons() {                                          //retrieves all the lessons with GET
+                    fetch('http://localhost:3000/collection/lessons')
+                        .then(response => response.json())
+                        .then(data => this.lessons = data)
+                        .catch(err => console.log(err));
                 },
 
-                /*saveOrder(body) {
-                    fetch('https://school-lessons.herokuapp.com/collection/orders', {
+                checkout(body) {
+                    this.cart.forEach(item => {
+                        let body = {
+                            "id": item.id,                          //lesson id 
+                            "title": item.title,                    //subject
+                            "name": this.order.name,                //user name
+                            "phone": this.order.phone,                  //user phone
+                            "spaces": 5 - item.availableSpace           //quantity
+                    };
+
+                    fetch('http://localhost:3000/collection/orders', {      
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify(body)
-                    }).then(response => response.json())
-                    .then(data => { return data }).catch(err => { return data });
-                },*/
-
-                getLessons() {
-                    fetch('https://school-lessons.herokuapp.com/collection/lessons')
-                        .then(response => response.json())
-                        .then(data => this.lessons = data)
-                        .catch(err => console.log(err));
-                }
-            },
-
-            /*checkout() {
-                    this.cart.forEach(item => {
-                        let body = {
-                            "id": item.lesson._id,
-                            "title": item.lesson.title,
-                            "name": this.order.name.value,
-                            "phone": this.order.phone.value,
-                            "spaces": item.availableSpace
-                        };
-                        this.saveOrder(body);
+                    })
                     });
-                    alert ("Order submitted");
-                    this.getLessons();
-                    this.cart = [];
-                },*/
+                    alert ("Order submitted");                              //gives alert message
+                    this.cart = [];                                             //clears the cart
+                },
+
+                
+
+            
 
             computed: {
                 cartItemCount: function () {                                //prints the number of items being added to cart

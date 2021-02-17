@@ -157,7 +157,7 @@
                 },*/
 
                 getLessons() {
-                    fetch('http://localhost:3000/collection/lessons')
+                    fetch('https://school-lessons.herokuapp.com/collection/lessons')
                         .then(response => response.json())
                         .then(data => this.lessons = data)
                         .catch(err => console.log(err));

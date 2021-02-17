@@ -141,7 +141,22 @@
                     this.showProduct = this.showProduct ? false : true;             //shows checkout page when button is clicked
                 },
 
-                getLessons() {                                          //retrieves all the lessons with GET
+                /*submitForm() {
+                    alert('Order submitted!');                              //displays alert message when checkout button is clicked
+                },*/
+
+                /*saveOrder(body) {
+                    fetch('http://localhost:3000/collection/orders', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(body)
+                    }).then(response => response.json())
+                    .then(data => { return data }).catch(err => { return data });
+                },*/
+
+                getLessons() {                                          //retrieves all the lessons with
                     fetch('http://localhost:3000/collection/lessons')
                         .then(response => response.json())
                         .then(data => this.lessons = data)
@@ -167,10 +182,10 @@
                     })
                     });
                     alert ("Order submitted");                              //gives alert message
+                    this.getLessons();
                     this.cart = [];                                             //clears the cart
                 },
-
-                
+            },
 
             
 

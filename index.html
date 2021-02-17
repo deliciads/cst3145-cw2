@@ -3,7 +3,6 @@
 <head>
     <title>School Lessons</title>
     <script src="https://unpkg.com/vue"></script>
-    <script src="lessons.js"></script>                              <!-- links to js file-->
     <link rel="stylesheet" type="text/css" href="style.css">        <!-- links to css file-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -146,13 +145,40 @@
                     alert('Order submitted!');                              //displays alert message when checkout button is clicked
                 },
 
+                /*saveOrder(body) {
+                    fetch('https://school-lessons.herokuapp.com/collection/orders', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(body)
+                    }).then(response => response.json())
+                    .then(data => { return data }).catch(err => { return data });
+                },*/
+
                 getLessons() {
-                    fetch('https://school-lessons.herokuapp.com/collection/lessons')
-                    .then(response => response.json())
-                    .then(data => this.lessons = data)
-                    .catch(err => console.log(err));
+                    fetch('http://localhost:3000/collection/lessons')
+                        .then(response => response.json())
+                        .then(data => this.lessons = data)
+                        .catch(err => console.log(err));
                 }
             },
+
+            /*checkout() {
+                    this.cart.forEach(item => {
+                        let body = {
+                            "id": item.lesson._id,
+                            "title": item.lesson.title,
+                            "name": this.order.name.value,
+                            "phone": this.order.phone.value,
+                            "spaces": item.availableSpace
+                        };
+                        this.saveOrder(body);
+                    });
+                    alert ("Order submitted");
+                    this.getLessons();
+                    this.cart = [];
+                },*/
 
             computed: {
                 cartItemCount: function () {                                //prints the number of items being added to cart

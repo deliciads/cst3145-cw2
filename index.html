@@ -117,7 +117,7 @@
             el: '#app',
             data: {
                 sitename: 'School Lessons',
-                lessons: lessons,
+                lessons: [],
                 cart: [],                       //cart array stores the lessons added
                 showProduct: true,              //lesson page is shown
                 attribute: '',                  //each category
@@ -144,6 +144,13 @@
 
                 submitForm() {
                     alert('Order submitted!');                              //displays alert message when checkout button is clicked
+                },
+
+                getLessons() {
+                    fetch('https://school-lessons.herokuapp.com/collection/lessons')
+                    .then(response => response.json())
+                    .then(data => this.lessons = data)
+                    .catch(err => console.log(err));
                 }
             },
 
@@ -246,6 +253,10 @@
 
                     return lessonsArray.sort(compare);
                 }
+            },
+
+            mounted() {
+                this.getLessons();
             }
         })
     </script>

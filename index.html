@@ -148,7 +148,32 @@
                         .catch(err => console.log(err));
                 },
 
-                checkout(body) {                                //saves a new order with POST
+                saveOrder(body) {                                                       //saves a new order using POST
+                    fetch('https://school-lessons.herokuapp.com/collection/orders', {
+                        method: 'POST',
+                        headers: { 'Content-Type' : 'application/json'},
+                        body: JSON.stringify(body)
+                    }).then(response => response.json())
+                    .then(data => {return data }).catch(err => {return data});
+                },
+
+                updateSpace(id, quantity) {                                       //updates the available lesson space with PUT
+                    fetch('https://school-lessons.herokuapp.com/collection/lessons/' + id, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(
+                            {
+                                "availableSpace": quantity
+                            }
+                        )
+
+                    }).then(response => response.json())
+                    .then(data => { return data }).catch(err => { return data});
+                },
+
+                checkout(body) {                                //consists data that needs to be added
                     this.cart.forEach(item => {
                         let body = {
                             "id": item.id,                          //lesson id 
@@ -156,41 +181,14 @@
                             "name": this.order.name,                //user name
                             "phone": this.order.phone,                  //user phone
                             "spaces": 5 - item.availableSpace           //quantity
-                    };
-
-                    fetch('https://school-lessons.herokuapp.com/collection/orders', {      
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(body)
-                    })
-
-                    this.updateSpace(item.id, item.availableSpace);
+                        };
+                        this.saveOrder(body);
+                        this.updateSpace(item._id, item.availableSpace);
                     });
-                    alert ("Order submitted");                              //gives alert message
-                    this.getLessons();
-                    this.cart = [];                                             //clears the cart
-                },
-
-                updateSpace(id, availableSpace) {                                       //updates the available lesson space with PUT
-                    fetch('https://school-lessons.herokuapp.com/collection/lessons/602b67c41f94f36154a61a0b', {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(
-                            {
-                                "availableSpace": availableSpace
-                            }
-                        )
-
-                    }).then(response => response.json())
-                    .then(data => { return data }).catch(err => { return data});
-                }   
+                    alert ("Order submitted");  
+                    this.cart = [];
+                }
             },
-
-            
 
             computed: {
                 cartItemCount: function () {                                //prints the number of items being added to cart
